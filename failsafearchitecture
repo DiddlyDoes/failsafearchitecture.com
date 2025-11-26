@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAILSAFE ARCHITECTURE</title>
+    <link rel="canonical" href="https://failsafearchitecture.com" />
+    <meta name="description" content="Acute Metabolic Optimization. A proprietary protocol by Failsafe Architecture Pty Ltd.">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;700&family=Inter:wght@300;600;900&display=swap" rel="stylesheet">
+    <style>
+        /* BACKGROUND ARCHITECTURE */
+        body { 
+            background-color: #050505; 
+            color: #e5e5e5; 
+            font-family: 'Inter', sans-serif;
+            /* Ensure 'trade.jpg' is in the root directory of your hosting */
+            background-image: linear-gradient(rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.95)), url('./trade.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .redacted {
+            background-color: #e5e5e5;
+            color: #e5e5e5;
+            cursor: help;
+            user-select: none;
+        }
+        .redacted:hover {
+            background-color: #333;
+            color: #e5e5e5;
+            transition: all 0.3s ease;
+        }
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.05);
+            position: fixed;
+            top: 0;
+            left: 0;
+            animation: scan 8s linear infinite;
+            pointer-events: none;
+            z-index: 50;
+        }
+        @keyframes scan {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .cursor-blink::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+        }
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        .legal-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .legal-scroll::-webkit-scrollbar-track {
+            background: #000; 
+        }
+        .legal-scroll::-webkit-scrollbar-thumb {
+            background: #333; 
+        }
+        .legal-scroll::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+        .progress-stripe {
+            background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+            background-size: 1rem 1rem;
+        }
+        .strike-diag {
+            position: relative;
+            color: #52525b;
+        }
+        .strike-diag::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #ef4444;
+            transform: rotate(-10deg);
+        }
+        /* Form Inputs */
+        .terminal-input {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #3f3f46;
+            color: white;
+            padding: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .terminal-input:focus {
+            outline: none;
+            border-color: #fff;
+            background: rgba(0,0,0,0.8);
+        }
+        .terminal-input::placeholder {
+            color: #52525b;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- COMPONENTS ---
+
+        const RedactedText = ({ children, hint = "CLASSIFIED" }) => {
+            const [revealed, setRevealed] = useState(false);
+            return (
+                <span 
+                    className={`relative inline-block px-1 mx-1 rounded-sm text-sm tracking-wider ${revealed ? 'bg-zinc-800 text-zinc-300' : 'bg-white text-white select-none'}`}
+                    onMouseEnter={() => setRevealed(true)}
+                    onMouseLeave={() => setRevealed(false)}
+                    title={hint}
+                >
+                    {revealed ? "REDACTED" : "████████"}
+                </span>
+            );
+        };
+
+        const ProgressBar = ({ value }) => (
+            <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+                <div 
+                    className="h-full bg-emerald-500 progress-stripe" 
+                    style={{ width: `${value}%` }}
+                ></div>
+            </div>
+        );
+
+        const DataGraph = () => {
+            return (
+                <div className="w-full h-64 border border-zinc-800 bg-zinc-900/50 backdrop-blur-md relative overflow-hidden rounded-lg mt-8 p-4">
+                    <div className="absolute top-2 left-2 text-xs font-mono text-zinc-500">FIG 1.1: CORTISOL CLEARANCE RATE</div>
+                    <svg className="w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="none">
+                        <line x1="0" y1="50" x2="400" y2="50" stroke="#333" strokeWidth="1" strokeDasharray="4 4" />
+                        <line x1="0" y1="100" x2="400" y2="100" stroke="#333" strokeWidth="1" strokeDasharray="4 4" />
+                        <line x1="0" y1="150" x2="400" y2="150" stroke="#333" strokeWidth="1" strokeDasharray="4 4" />
+                        <path d="M0,20 Q100,30 400,120" fill="none" stroke="#555" strokeWidth="2" />
+                        <text x="350" y="110" fill="#555" fontSize="10" className="font-mono">STANDARD</text>
+                        <path d="M0,20 Q50,20 150,180 L400,190" fill="none" stroke="#fff" strokeWidth="2" />
+                        <text x="160" y="170" fill="#fff" fontSize="10" className="font-mono">FAILSAFE PROTOCOL</text>
+                    </svg>
+                </div>
+            );
+        };
+
+        const AgeGate = ({ onVerify }) => {
+            return (
+                <div className="h-screen w-full flex flex-col items-center justify-center bg-black text-white font-mono p-4 fixed top-0 left-0 z-50">
+                    <div className="max-w-md w-full border border-zinc-800 bg-[#0a0a0a] p-8 relative shadow-2xl">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-red-600 animate-pulse"></div>
+                        <div className="text-red-500 text-xs tracking-[0.2em] mb-6 flex items-center gap-2">
+                            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                            COMPLIANCE CHECKPOINT
+                        </div>
+                        
+                        <h2 className="text-xl font-bold text-white mb-4 tracking-tight">BIOLOGICAL MATURITY REQUIRED</h2>
+                        
+                        <p className="text-zinc-500 text-xs mb-8 leading-relaxed">
+                            ACCESS TO THIS PROTOCOL IS RESTRICTED TO AUTHORIZED PERSONNEL AGED 18 OR OLDER.
+                            <br/><br/>
+                            THE COMPOUNDS DETAILED WITHIN ARE POTENT METABOLIC MODULATORS DESIGNED FOR ADULT PHYSIOLOGY.
+                        </p>
+                        
+                        <div className="flex flex-col gap-3">
+                            <button 
+                                onClick={onVerify} 
+                                className="w-full py-4 text-xs font-bold bg-white text-black hover:bg-zinc-200 transition-colors tracking-widest uppercase"
+                            >
+                                > Affirmative (I am 18+)
+                            </button>
+                            <button 
+                                onClick={() => window.location.href = 'https://google.com'} 
+                                className="w-full py-4 text-xs font-mono border border-zinc-800 text-zinc-600 hover:text-white hover:border-zinc-600 transition-colors tracking-widest uppercase"
+                            >
+                                Negative (Exit Terminal)
+                            </button>
+                        </div>
+                        
+                        <div className="mt-6 text-[10px] text-zinc-800 text-center">
+                            VERIFICATION ID: {Math.floor(Math.random() * 999999)} // SECURE
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const LoginScreen = ({ onLogin }) => {
+            const [input, setInput] = useState("");
+            const [error, setError] = useState(false);
+            const [bootText, setBootText] = useState("INITIALIZING SECURE CONNECTION...");
+            const [showInput, setShowInput] = useState(false);
+
+            useEffect(() => {
+                const timer1 = setTimeout(() => setBootText("ESTABLISHING ENCRYPTED TUNNEL..."), 800);
+                const timer2 = setTimeout(() => setBootText("VERIFYING BIOMETRICS... SKIP"), 1600);
+                const timer3 = setTimeout(() => setShowInput(true), 2400);
+                return () => { clearTimeout(timer1); clearTimeout(timer2); clearTimeout(timer3); };
+            }, []);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (input === "mra227") {
+                    onLogin();
+                } else {
+                    setError(true);
+                    setInput("");
+                    setTimeout(() => setError(false), 1000);
+                }
+            };
+
+            return (
+                <div className="h-screen w-full flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm text-white font-mono p-4">
+                    <div className="max-w-md w-full">
+                        <div className="mb-8 text-xs tracking-[0.5em] text-zinc-500">FAILSAFE ARCHITECTURE</div>
+                        {!showInput ? (
+                            <div className="text-sm text-emerald-500 cursor-blink">{bootText}</div>
+                        ) : (
+                            <form onSubmit={handleSubmit} className="w-full">
+                                <div className="text-xs mb-2 text-zinc-400">ENTER CLEARANCE CODE:</div>
+                                <div className={`relative flex items-center border-b-2 ${error ? 'border-red-500 shake' : 'border-zinc-700 focus-within:border-white'} transition-colors`}>
+                                    <span className="text-zinc-500 mr-2">></span>
+                                    <input 
+                                        type="password" 
+                                        autoFocus
+                                        className="w-full bg-transparent outline-none py-2 text-xl tracking-widest font-bold text-white placeholder-zinc-800"
+                                        placeholder="******"
+                                        value={input}
+                                        onChange={(e) => setInput(e.target.value)}
+                                    />
+                                </div>
+                                {error && <div className="text-red-500 text-xs mt-2">ACCESS DENIED. INVALID CREDENTIALS.</div>}
+                            </form>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const NREAModal = ({ onClose, onAccept }) => {
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-[fadeIn_0.3s_ease-out]">
+                    <div className="bg-[#0a0a0a]/95 border border-zinc-600 w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh]">
+                        <div className="border-b border-zinc-800 p-4 flex justify-between items-center bg-zinc-900/50">
+                            <h3 className="font-mono text-xs text-red-500 tracking-widest flex items-center gap-2">
+                                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                                SECURITY PROTOCOL: ACTION REQUIRED
+                            </h3>
+                            <div className="font-mono text-[10px] text-zinc-500">DOC_ID: FA-NREA-2025</div>
+                        </div>
+                        <div className="p-6 overflow-y-auto legal-scroll font-mono text-xs text-zinc-400 leading-relaxed space-y-4">
+                            <p className="text-zinc-300 font-bold uppercase border-b border-zinc-800 pb-2 mb-4">
+                                Non-Reverse Engineering & Material Transfer Agreement (NREA)
+                            </p>
+                            <p><strong>1.0 PREAMBLE</strong><br/>
+                            This Agreement is entered into by and between FAILSAFE ARCHITECTURE PTY LTD ("The Architect") and THE AUTHORIZED RECIPIENT ("The Subject")...</p>
+                            <p><strong>2.0 THE "BLACK BOX" COVENANT</strong><br/>
+                            The Subject acknowledges that The Compound is a proprietary trade secret. The Subject is granted a license to metabolize The Compound, but not to know The Compound.</p>
+                            <p className="text-red-400/80 border-l-2 border-red-500 pl-2">
+                                *Any breach of Clause 3.0 will result in immediate termination of supply.
+                            </p>
+                            <p><strong>4.0 PRE-SALE FINANCIAL COMMITMENT</strong><br/>
+                            The Subject acknowledges this is a Beta Allocation for Batch #005. Payment of $99.00 (Retail Value: $297.00) reserves 3 x Full Protocols. The Architect will issue an invoice to the provided contact details. Dispatch commences upon payment clearance.</p>
+                        </div>
+                        <div className="border-t border-zinc-800 p-4 flex gap-4 bg-zinc-900/50">
+                            <button onClick={onClose} className="flex-1 py-3 px-4 text-xs font-mono text-zinc-500 hover:text-white border border-transparent hover:border-zinc-700 transition-all">DECLINE</button>
+                            <button onClick={onAccept} className="flex-1 py-3 px-4 text-xs font-mono font-bold bg-white text-black hover:bg-zinc-200 transition-colors tracking-wide">CONFIRM & TRANSMIT</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [isAgeVerified, setIsAgeVerified] = useState(false);
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+            const [status, setStatus] = useState("IDLE");
+            const [showModal, setShowModal] = useState(false);
+            
+            // FORM STATE
+            const [formData, setFormData] = useState({
+                name: "",
+                email: "",
+                address: "",
+                city: "",
+                state: "",
+                zip: "",
+                country: ""
+            });
+
+            const handleAgeVerify = () => setIsAgeVerified(true);
+            const handleLoginSuccess = () => setIsAuthenticated(true);
+            
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({...prev, [name]: value}));
+            };
+
+            const handleRequestClick = (e) => {
+                e.preventDefault();
+                // Basic Validation
+                if (formData.email.includes("@") && formData.name.length > 2 && formData.address.length > 5) {
+                    setShowModal(true);
+                } else {
+                    alert("DATA INCOMPLETE: PLEASE FILL ALL LOGISTICS FIELDS.");
+                }
+            };
+
+            const handleNREAAccept = () => {
+                setShowModal(false);
+                setStatus("LOADING");
+                
+                // CONSTRUCT MAILTO LINK
+                const subject = `FAILSAFE ALLOCATION: BATCH #005 [${formData.name}]`;
+                const body = `INVOICE REQUEST
+------------------------------------------------
+RECIPIENT: George Rossiter (Failsafe Architecture)
+FROM: ${formData.name}
+EMAIL: ${formData.email}
+
+ORDER DETAILS:
+------------------------------------------------
+ITEM: Executive Kit (3-Pack / 9 Capsules)
+BATCH: #005-OMEGA
+PRICE: $99.00 AUD (Beta Subsidy)
+
+SHIPPING LOGISTICS:
+------------------------------------------------
+ADDRESS: ${formData.address}
+CITY: ${formData.city}
+STATE: ${formData.state}
+ZIP: ${formData.zip}
+COUNTRY: ${formData.country}
+
+PROTOCOL:
+------------------------------------------------
+I confirm I am 18+ and agree to the NREA.
+Please issue invoice to the email provided.
+`;
+                
+                // Simulate processing then trigger mailto
+                setTimeout(() => {
+                    setStatus("SUCCESS");
+                    window.location.href = `mailto:george.james.rossiter@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                }, 1500);
+            };
+
+            if (!isAgeVerified) return <AgeGate onVerify={handleAgeVerify} />;
+            if (!isAuthenticated) return <LoginScreen onLogin={handleLoginSuccess} />;
+
+            return (
+                <div className="min-h-screen text-gray-300 selection:bg-white selection:text-black relative animate-[fadeIn_1s_ease-in]">
+                    <div className="scanline"></div>
+                    {showModal && <NREAModal onClose={() => setShowModal(false)} onAccept={handleNREAAccept} />}
+
+                    <nav className="fixed top-0 w-full border-b border-zinc-900/50 bg-[#050505]/80 backdrop-blur-md z-40 flex justify-between items-center px-6 py-4">
+                        <div className="font-mono text-xs tracking-[0.2em] text-white">
+                            FAILSAFE<span className="text-zinc-600">ARCHITECTURE</span>
+                        </div>
+                        <div className="flex gap-4 font-mono text-xs text-zinc-500">
+                            <span className="hidden md:inline">CLEARANCE: <span className="text-emerald-500">MRA-227</span></span>
+                            <span>BATCH: #005-PRE</span>
+                        </div>
+                    </nav>
+
+                    <header className="relative pt-32 pb-20 px-6 max-w-4xl mx-auto border-l border-r border-zinc-900/30 grid-bg">
+                        <div className="inline-block px-2 py-1 border border-zinc-700 text-xs font-mono text-zinc-400 mb-6 rounded-full bg-black/40 backdrop-blur-sm">
+                            STATUS: PRE-SALE ACTIVE
+                        </div>
+                        <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tighter leading-tight mb-8 drop-shadow-lg">
+                            ACUTE METABOLIC<br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-200 to-zinc-600">OPTIMIZATION.</span>
+                        </h1>
+                        <p className="text-lg md:text-xl text-zinc-300 max-w-2xl leading-relaxed drop-shadow-md">
+                            We do not fix mistakes. We optimize biology. <br/>
+                            A proprietary, high-velocity compound designed to neutralize <RedactedText>ACETALDEHYDE</RedactedText> toxicity.
+                        </p>
+                    </header>
+
+                    <section className="border-t border-zinc-800/50 bg-black/40 backdrop-blur-sm">
+                        <div className="max-w-4xl mx-auto px-6 py-24 border-l border-r border-zinc-900/30">
+                            <div className="grid md:grid-cols-2 gap-12 items-start">
+                                <div>
+                                    <h2 className="font-mono text-xs text-emerald-500 mb-4 tracking-widest uppercase">Mechanism of Action</h2>
+                                    <h3 className="text-2xl font-semibold text-white mb-6">The "Black Box" Protocol</h3>
+                                    <div className="space-y-4 text-zinc-300 text-sm leading-7">
+                                        <p>Standard recovery methods rely on hydration. This is insufficient for acute toxicity.</p>
+                                        <p>The Failsafe Protocol utilizes a dense matrix of <RedactedText>COMPOUND A</RedactedText> to bind directly to toxins.</p>
+                                        <p className="font-mono text-xs pt-4 text-zinc-500 border-l-2 border-zinc-700 pl-4">WARNING: IP PROTECTION ACTIVE. INGREDIENT LIST CLASSIFIED.</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <DataGraph />
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* PRE-SALE PRODUCT SECTION */}
+                    <section className="py-24 max-w-4xl mx-auto px-6 border-l border-r border-zinc-900/30">
+                        <div className="bg-zinc-900/80 backdrop-blur border border-zinc-800 p-8 md:p-12 rounded-lg relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-4 font-mono text-xs text-zinc-500">
+                                BATCH_ID: FS-005-OMEGA
+                            </div>
+                            
+                            <h2 className="text-3xl font-bold text-white mb-2">Pre-Order: The Executive Kit</h2>
+                            <p className="text-zinc-400 mb-8 max-w-md">
+                                Reserve your allocation for the upcoming compounding cycle. Ships strictly on release date.
+                            </p>
+
+                            {/* TACTICAL MANIFEST */}
+                            <div className="bg-black/60 border border-zinc-700/50 rounded p-6 mb-8 font-mono text-xs">
+                                <div className="flex justify-between items-center mb-4 text-zinc-400 border-b border-zinc-800 pb-2">
+                                    <span>TACTICAL SUPPLY MANIFEST</span>
+                                    <span className="text-emerald-500 animate-pulse">● LIVE</span>
+                                </div>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                                    <div>
+                                        <div className="text-zinc-600 mb-1">CONFIGURATION</div>
+                                        <div className="text-white">3-PACK (TRI-DOSE)</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-zinc-600 mb-1">CAPSULES</div>
+                                        <div className="text-white">9 UNITS TOTAL</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-zinc-600 mb-1">RETAIL VALUE</div>
+                                        <div className="strike-diag">$297.00</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-zinc-600 mb-1">PRE-SALE PRICE</div>
+                                        <div className="text-emerald-400 font-bold">$99.00</div>
+                                    </div>
+                                </div>
+                                <div className="mb-2 flex justify-between text-zinc-500 uppercase">
+                                    <span>BETA SUBSIDY APPLIED (66% OFF)</span>
+                                    <span>Allocation Saturation: 87%</span>
+                                </div>
+                                <ProgressBar value={87} />
+                            </div>
+
+                            <div className="border-t border-zinc-800 pt-8">
+                                {status === "SUCCESS" ? (
+                                    <div className="text-emerald-500 font-mono text-sm border border-emerald-900/30 bg-emerald-900/10 p-4 rounded text-center">
+                                        > TRANSMISSION SENT.<br/>> CHECK YOUR EMAIL CLIENT TO CONFIRM SEND.
+                                    </div>
+                                ) : (
+                                    <form onSubmit={handleRequestClick} className="flex flex-col gap-4">
+                                        
+                                        <div className="font-mono text-xs text-zinc-500 border-b border-zinc-800 pb-2 mb-2">LOGISTICAL DATA ENTRY</div>
+                                        
+                                        <div className="flex flex-col md:flex-row gap-4">
+                                            <input type="text" name="name" placeholder="FULL NAME / ENTITY" required className="terminal-input" value={formData.name} onChange={handleInputChange} />
+                                            <input type="email" name="email" placeholder="CORPORATE EMAIL" required className="terminal-input" value={formData.email} onChange={handleInputChange} />
+                                        </div>
+                                        
+                                        <input type="text" name="address" placeholder="STREET ADDRESS" required className="terminal-input" value={formData.address} onChange={handleInputChange} />
+                                        
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            <input type="text" name="city" placeholder="CITY" required className="terminal-input" value={formData.city} onChange={handleInputChange} />
+                                            <input type="text" name="state" placeholder="STATE" required className="terminal-input" value={formData.state} onChange={handleInputChange} />
+                                            <input type="text" name="zip" placeholder="ZIP/POSTAL" required className="terminal-input" value={formData.zip} onChange={handleInputChange} />
+                                            <input type="text" name="country" placeholder="COUNTRY" required className="terminal-input" value={formData.country} onChange={handleInputChange} />
+                                        </div>
+
+                                        <button 
+                                            type="submit"
+                                            disabled={status === "LOADING"}
+                                            className="bg-white text-black w-full py-4 font-bold tracking-wide hover:bg-zinc-200 transition-colors disabled:opacity-50 font-mono text-sm mt-4"
+                                        >
+                                            {status === "LOADING" ? "COMPILING PACKET..." : "SECURE PRE-ORDER ALLOCATION"}
+                                        </button>
+                                    </form>
+                                )}
+                                <p className="mt-4 text-xs text-zinc-600 text-center">
+                                    Payment invoice will be issued upon receipt of this transmission.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer className="border-t border-zinc-900/50 py-12 bg-black/80 backdrop-blur-md">
+                        <div className="max-w-4xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div className="text-zinc-600 text-xs font-mono">
+                                <p>&copy; 2025 FAILSAFE ARCHITECTURE PTY LTD.</p>
+                                <p className="mt-1">
+                                    CREATOR: <a href="https://GeorgeRossiter.com" target="_blank" className="hover:text-white transition-colors border-b border-zinc-700 hover:border-white pb-0.5">George Rossiter</a>
+                                </p>
+                            </div>
+                            <div className="flex gap-6 text-zinc-600 text-xs">
+                                <a href="#" className="hover:text-white transition-colors">LEGAL</a>
+                                <a href="#" className="hover:text-white transition-colors">SAFETY</a>
+                            </div>
+                        </div>
+                        <div className="max-w-4xl mx-auto px-6 mt-8 text-[10px] text-zinc-700 text-center leading-relaxed">
+                            DISCLAIMER: This product is for metabolic optimization and liver support. It does not reduce Blood Alcohol Content (BAC).
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
