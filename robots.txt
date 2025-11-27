@@ -1,0 +1,19 @@
+# IP Ownership: Failsafe Architecture Pty Ltd
+# Creator: George Rossiter
+
+# This directive allows all search engine crawlers access (User-agent: *)
+User-agent: *
+
+# Explicitly Allow the main public page (Root directory)
+Allow: /
+
+# Disallow sensitive or unnecessary directories to reinforce the Fortified Data Silo.
+Disallow: /wp-admin/
+Disallow: /wp-includes/
+Disallow: /private/
+Disallow: /data/
+Disallow: /api/
+
+# Specify the location of your XML Sitemap to guide the crawler to the public entry point.
+# Please ensure this sitemap exists and only contains the public URLs.
+Sitemap: https://failsafearchitecture.com/sitemap.xml
