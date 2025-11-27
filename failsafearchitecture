@@ -3,136 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAILSAFE ARCHITECTURE</title>
-    <link rel="canonical" href="https://failsafearchitecture.com" />
-    <meta name="description" content="Acute Metabolic Optimization. A proprietary protocol by Failsafe Architecture Pty Ltd.">
+    <title>FAILSAFE ARCHITECTURE PTY LTD - Secure Blueprint</title>
+    <!-- React and Babel for JSX in browser -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;700&family=Inter:wght@300;600;900&display=swap" rel="stylesheet">
     <style>
-        /* BACKGROUND ARCHITECTURE */
-        body { 
-            background-color: #050505; 
-            color: #e5e5e5; 
-            font-family: 'Inter', sans-serif;
-            /* Ensure 'trade.jpg' is in the root directory of your hosting */
-            background-image: linear-gradient(rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.95)), url('./trade.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
+        /* BASE STYLES FOR PRE-SALE PAGE */
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .redacted {
-            background-color: #e5e5e5;
-            color: #e5e5e5;
-            cursor: help;
-            user-select: none;
+        .font-sans { font-family: 'Inter', sans-serif; }
+        .grid-bg { 
+            background-size: 40px 40px; 
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px); 
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%); 
         }
-        .redacted:hover {
-            background-color: #333;
-            color: #e5e5e5;
-            transition: all 0.3s ease;
-        }
-        .grid-bg {
-            background-size: 40px 40px;
-            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
-        }
-        .scanline {
-            width: 100%;
-            height: 2px;
-            background: rgba(255,255,255,0.05);
-            position: fixed;
-            top: 0;
-            left: 0;
-            animation: scan 8s linear infinite;
-            pointer-events: none;
-            z-index: 50;
-        }
-        @keyframes scan {
-            0% { top: -10%; }
-            100% { top: 110%; }
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        .cursor-blink::after {
-            content: '_';
-            animation: blink 1s step-end infinite;
-        }
-        .shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-        }
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-        .legal-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-        .legal-scroll::-webkit-scrollbar-track {
-            background: #000; 
-        }
-        .legal-scroll::-webkit-scrollbar-thumb {
-            background: #333; 
-        }
-        .legal-scroll::-webkit-scrollbar-thumb:hover {
-            background: #555; 
-        }
-        .progress-stripe {
-            background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
-            background-size: 1rem 1rem;
-        }
-        .strike-diag {
-            position: relative;
-            color: #52525b;
-        }
-        .strike-diag::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            width: 100%;
-            height: 1px;
-            background: #ef4444;
-            transform: rotate(-10deg);
-        }
-        /* Form Inputs */
-        .terminal-input {
-            background: rgba(0,0,0,0.6);
-            border: 1px solid #3f3f46;
-            color: white;
-            padding: 0.75rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            width: 100%;
-            transition: all 0.2s;
-        }
-        .terminal-input:focus {
-            outline: none;
-            border-color: #fff;
-            background: rgba(0,0,0,0.8);
-        }
-        .terminal-input::placeholder {
-            color: #52525b;
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(71, 85, 105, 0.5); border-radius: 2px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.5); }
+        .scanline { width: 100%; height: 2px; background: rgba(255,255,255,0.05); position: fixed; top: 0; left: 0; animation: scan 8s linear infinite; pointer-events: none; z-index: 50; }
+        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .cursor-blink::after { content: '_'; animation: blink 1s step-end infinite; }
+        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+        .legal-scroll::-webkit-scrollbar { width: 6px; }
+        .legal-scroll::-webkit-scrollbar-track { background: #000; }
+        .legal-scroll::-webkit-scrollbar-thumb { background: #333; }
+        .legal-scroll::-webkit-scrollbar-thumb:hover { background: #555; }
+        .progress-stripe { background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent); background-size: 1rem 1rem; }
+        .strike-diag { position: relative; color: #52525b; }
+        .strike-diag::after { content: ''; position: absolute; left: 0; top: 50%; width: 100%; height: 1px; background: #ef4444; transform: rotate(-10deg); }
+        .terminal-input { background: rgba(0,0,0,0.6); border: 1px solid #3f3f46; color: white; padding: 0.75rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; width: 100%; transition: all 0.2s; }
+        .terminal-input:focus { outline: none; border-color: #fff; background: rgba(0,0,0,0.8); }
+        .terminal-input::placeholder { color: #52525b; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeIn { animation: fadeIn 0.2s ease-out forwards; }
+        @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+        .animate-pulse-slow { animation: pulse-slow 3s infinite; }
+        /* CRITICAL FIX: Increased height for data review */
+        .protocol-list-container {
+            height: 150vh; /* Increased from 500px to 150vh for better data density review */
+            max-height: none; /* Allow list to stretch */
+            overflow-y: auto;
         }
     </style>
 </head>
-<body>
+<body class="bg-[#050b14]">
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useMemo, useEffect } = React;
+        
+        // --- ICON IMPLEMENTATION (SVG Inlined for Stability) ---
+        const IconRenderer = ({ name, size = 24, className = '', strokeWidth = 2 }) => {
+            const props = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth, strokeLinecap: "round", strokeLinejoin: "round", className };
+            
+            switch (name) {
+                case 'Hexagon':
+                    return <svg {...props}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>;
+                case 'Shield':
+                    return <svg {...props}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
+                case 'Database':
+                    return <svg {...props}><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 12a9 3 0 0 0 18 0"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/></svg>;
+                case 'Cpu':
+                    return <svg {...props}><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M20 15h2"/><path d="M9 2v2"/><path d="M9 20v2"/><path d="M2 9h2"/><path d="M20 9h2"/></svg>;
+                case 'FlaskConical':
+                    return <svg {...props}><path d="M10 2v7.31L5.3 14h13.4L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 14h10"/><path d="M12 7v5"/><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2Z"/></svg>;
+                case 'Leaf':
+                    return <svg {...props}><path d="M11 20A7 7 0 0 1 9.86 6.86 7 7 0 0 0 16 11l-4 4 4 4a8 8 0 0 1-5 1.14z"/><path d="M15.5 17.5l-4-4"/></svg>;
+                case 'Rocket':
+                    return <svg {...props}><path d="M4.5 17.5a1.5 1.5 0 0 0 1-1.4V11a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5.1a1.5 1.5 0 0 0 1 1.4L20 22h-3L13.5 17.5z"/><path d="M11.5 4v7"/><path d="M18.5 11v5.1"/><path d="M5.5 16.1V11"/></svg>;
+                case 'Sprout':
+                    return <svg {...props}><path d="M7 20h10"/><path d="M10 20c5-11 3-15 0-19"/><path d="M14 20c-5-11-3-15 0-19"/></svg>;
+                case 'Crosshair':
+                    return <svg {...props}><circle cx="12" cy="12" r="10"/><path d="M22 12h-4"/><path d="M6 12H2"/><path d="M12 6V2"/><path d="M12 22v-4"/></svg>;
+                case 'Dna':
+                    return <svg {...props}><path d="M2 15a6 6 0 0 1 6-6 6 6 0 0 0 6-6 6 6 0 0 1 6-6"/><path d="M2 9c0 6 4 9 4 9 0 6 4 9 4 9"/><path d="M15 15c0 6-4 9-4 9 0 6-4 9-4 9"/></svg>;
+                case 'Zap':
+                    return <svg {...props}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>;
+                case 'Brain':
+                    return <svg {...props}><path d="M12 5c-1.3 0-2.6.4-3.5 1.2a3 3 0 0 0-2.8 0A8 8 0 0 0 2 12c0 1.5.5 3.3 1.5 5.5s2.5 3 4 3c1.5 0 3.3-.5 5.5-1.5s3-2.5 3-4c0-1.3-.4-2.6-1.2-3.5a3 3 0 0 0 0-2.8A8 8 0 0 0 12 5z"/><path d="M12 5v14c1.3 0 2.6-.4 3.5-1.2a3 3 0 0 0 2.8 0A8 8 0 0 0 22 12c0-1.5-.5-3.3-1.5-5.5s-2.5-3-4-3c-1.5 0-3.3.5-5.5 1.5s-3 2.5-3 4c0 1.3.4 2.6 1.2 3.5a3 3 0 0 0 0 2.8A8 8 0 0 0 12 19z"/></svg>;
+                case 'Activity':
+                    return <svg {...props}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>;
+                case 'Eye':
+                    return <svg {...props}><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>;
+                case 'AlertCircle':
+                    return <svg {...props}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg>;
+                case 'ChevronRight':
+                    return <svg {...props}><polyline points="9 18 15 12 9 6"/></svg>;
+                case 'ChevronLeft':
+                    return <svg {...props}><polyline points="15 18 9 12 15 6"/></svg>;
+                case 'EyeOff':
+                    return <svg {...props}><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-10-7-10-7a1.17 1.17 0 0 1 0-.67"/><path d="M4.24 4.24A10.07 10.07 0 0 1 12 4c7 0 10 7 10 7a1.17 1.17 0 0 1 0 .67"/><path d="M15.01 12.01A3 3 0 1 0 8.99 8.99"/><path d="M1 1l22 22"/></svg>;
+                case 'Layers':
+                    return <svg {...props}><path d="M12 11c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/><path d="M12 5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/><path d="M12 1c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/></svg>;
+                default:
+                    return <svg {...props}><circle cx="12" cy="12" r="10" stroke="red"/><line x1="12" y1="16" x2="12" y2="12" stroke="red"/><line x1="12" y1="8" x2="12" y2="8" stroke="red"/></svg>;
+            }
+        };
 
-        // --- COMPONENTS ---
 
-        const RedactedText = ({ children, hint = "CLASSIFIED" }) => {
+        // --- GLOBAL CONSTANTS ---
+        const TOTAL_PROTOCOLS = 132; 
+        const TOTAL_COMPONENTS = 232;
+        const TOTAL_TECHNOLOGY_COMPOUNDS = 115;
+        const TOTAL_NATURAL_COMPOUNDS = 117; 
+
+        // --- CATEGORY DEFINITION (Global) ---
+        const categories = [
+            { id: 'SPACE', name: 'Aerospace & Extremophile', iconName: 'Rocket', color: 'text-sky-400', border: 'border-sky-400/30' },
+            { id: 'ENVI', name: 'Environmental & Toxicology', iconName: 'Sprout', color: 'text-emerald-500', border: 'border-emerald-500/30' },
+            { id: 'AGRI', name: 'Agricultural Science', iconName: 'Layers', color: 'text-green-600', border: 'border-green-600/30' },
+            { id: 'TAC',  name: 'Tactical & Defense Medicine', iconName: 'Crosshair', color: 'text-stone-400', border: 'border-stone-500/30' },
+            { id: 'BIO',  name: 'Biologicals & Peptides', iconName: 'Dna', color: 'text-emerald-300', border: 'border-emerald-400/30' },
+            { id: 'FUEL', name: 'Metabolic Fuel & Energy', iconName: 'Zap', color: 'text-yellow-400', border: 'border-yellow-400/30' },
+            { id: 'GENE', name: 'Epigenetics & Longevity', iconName: 'Cpu', color: 'text-indigo-300', border: 'border-indigo-400/30' },
+            { id: 'NEURO', name: 'Nootropics & Cognition', iconName: 'Brain', color: 'text-violet-400', border: 'border-violet-500/30' },
+            { id: 'PSYCH', name: 'Psychiatry & Addiction', iconName: 'Activity', color: 'text-fuchsia-400', border: 'border-fuchsia-500/30' },
+            { id: 'OPHT', name: 'Ophthalmology (Sterile)', iconName: 'Eye', color: 'text-cyan-300', border: 'border-cyan-400/30' },
+            { id: 'ONCO', name: 'Oncology & Cancer Support', iconName: 'AlertCircle', color: 'text-rose-500', border: 'border-rose-500/30' },
+            { id: 'PALL', name: 'Palliative & End of Life', iconName: 'Shield', color: 'text-slate-400', border: 'border-slate-500/30' },
+            { id: 'PAIN', name: 'Pain & Neuropathy', iconName: 'Activity', color: 'text-amber-500', border: 'border-amber-500/30' },
+            { id: 'DERM', name: 'Dermatology & Aesthetics', iconName: 'Activity', color: 'text-pink-400', border: 'border-pink-500/30' },
+            { id: 'HRT',  name: 'Endocrinology & Women\'s Health', iconName: 'Activity', color: 'text-emerald-500', border: 'border-emerald-500/30' },
+            { id: 'URO',  name: 'Urology & Men\'s Health', iconName: 'Activity', color: 'text-blue-500', border: 'border-blue-500/30' },
+            { id: 'SPRT', name: 'Sports Medicine & Physio', iconName: 'Activity', color: 'text-orange-500', border: 'border-orange-500/30' },
+            { id: 'ENT',  name: 'ENT & Sinus', iconName: 'Activity', color: 'text-teal-400', border: 'border-teal-500/30' },
+            { id: 'DENT', name: 'Dental & Oral Medicine', iconName: 'Activity', color: 'text-indigo-400', border: 'border-indigo-500/30' },
+            { id: 'POD',  name: 'Podiatry & Wound Care', iconName: 'Activity', color: 'text-yellow-600', border: 'border-yellow-600/30' },
+            { id: 'GAST', name: 'Gastroenterology', iconName: 'Activity', color: 'text-lime-400', border: 'border-lime-500/30' },
+            { id: 'VET',  name: 'Veterinary Medicine', iconName: 'Activity', color: 'text-cyan-400', border: 'border-cyan-500/30' },
+            { id: 'PED',  name: 'Pediatrics & Orphans', iconName: 'Activity', color: 'text-purple-400', border: 'border-purple-500/30' },
+        ];
+        
+        // --- PROTOCOL DATA ---
+        const useProtocolData = () => {
+            const baseProtocols = [
+                // --- ENVIRONMENTAL & TOXICOLOGY ---
+                { id: 'ENV-01', cat: 'ENVI', name: 'Heavy Metal Chelation Complex', type: 'Transdermal/IV Driver' },
+                { id: 'ENV-02', cat: 'ENVI', name: 'Mycotoxin Binder Matrix (Mold Exposure)', type: 'Liposomal Emulsion' },
+                { id: 'ENV-03', cat: 'ENVI', name: 'Organophosphate Neutralizing Agent', type: 'Injectable Base' },
+                { id: 'ENV-04', cat: 'ENVI', name: 'Industrial Water Purification Catalyst', type: 'Effervescent Tablet' },
+                { id: 'ENV-05', cat: 'ENVI', name: 'Radiation Isotope Blocking Solution', type: 'Oral Solution' },
+                { id: 'ENV-06', cat: 'ENVI', name: 'PFOA / PFAS Filter Complex', type: 'Capsule (Polymer Carrier)' },
+                { id: 'ENV-07', cat: 'ENVI', name: 'Aerosolized Allergen Mitigation', type: 'Nasal Spray (Viscous)' },
+                // --- OPHTHALMOLOGY ---
+                { id: 'OPT-01', cat: 'OPHT', name: 'Autologous Serum Analog (Severe Dry Eye)', type: 'Sterile 20% Solution' },
+                { id: 'OPT-02', cat: 'OPHT', name: 'Myopia Control Micro-Dose Solution', type: 'Sterile 0.01% Drops' },
+                { id: 'OPT-03', cat: 'OPHT', name: 'Fortified Glycopeptide Antibiotic', type: 'Ophthalmic Soln' },
+                { id: 'OPT-04', cat: 'OPHT', name: 'Bandage Contact Lens Antimicrobial Soak', type: 'Preservative Free' },
+                { id: 'OPT-05', cat: 'OPHT', name: 'Fungal Keratitis Amphotericin B', type: 'Sterile Suspension' },
+                // --- PSYCHIATRY & ADDICTION ---
+                { id: 'PSY-01', cat: 'PSYCH', name: 'NMDA Receptor Modulator (Resistant Depression)', type: 'Rapid Dissolve Troche' },
+                { id: 'PSY-02', cat: 'PSYCH', name: 'Opioid Antagonist Immunomodulator (Low Dose)', type: 'Capsule' },
+                { id: 'PSY-03', cat: 'PSYCH', name: 'Aldehyde Dehydrogenase Inhibitor Implant', type: 'Sterile Pellet' },
+                { id: 'PSY-04', cat: 'PSYCH', name: 'Neuropeptide Bonding Agent (Social)', type: 'Atomized Solution' },
+                { id: 'PSY-05', cat: 'PSYCH', name: 'Bipolar II Stabilization Complex', type: 'Extended Release Capsule' },
+                { id: 'PSY-06', cat: 'PSYCH', name: 'Harm Reduction Agitation Control', type: 'Sublingual Film' },
+                // --- AEROSPACE ---
+                { id: 'SPC-01', cat: 'SPACE', name: 'Zero-G Muscle Atrophy Countermeasure', type: 'Myostatin Inhibitor' },
+                { id: 'SPC-02', cat: 'SPACE', name: 'Cosmic Radiation DNA Shielding Matrix', type: 'Antioxidant Complex' },
+                { id: 'SPC-03', cat: 'SPACE', name: 'Circadian Entrainment (Rapid Shift)', type: 'Transdermal Chrono-Modulator' },
+                { id: 'SPC-04', cat: 'SPACE', name: 'Hypoxic Environment Oxygen Optimization', type: 'Sublingual Carrier' },
+                { id: 'SPC-05', cat: 'SPACE', name: 'Vestibular Dampening Agent (Motion)', type: 'Intranasal Gel' },
+                { id: 'SPC-06', cat: 'SPACE', name: 'Water Reclamation Biocide (Closed Loop)', type: 'Effervescent Tablet' },
+                { id: 'SPC-07', cat: 'SPACE', name: 'Microgravity Osteoporosis Prevention', type: 'Injectable Calcium Vector' },
+                // --- AGRICULTURE ---
+                { id: 'AGR-01', cat: 'AGRI', name: 'Livestock Viral Resistance Booster', type: 'Feed Additive Matrix' },
+                { id: 'AGR-02', cat: 'AGRI', name: 'Equine Performance/Recovery Interface', type: 'Injectable Solution' },
+                { id: 'AGR-03', cat: 'AGRI', name: 'Apiary (Bee) Colony Collapse Prevention', type: 'Aerosolized Nutrient' },
+                { id: 'AGR-04', cat: 'AGRI', name: 'Soil Remediation Bacterial Catalyst', type: 'Lyophilized Powder' },
+                { id: 'AGR-05', cat: 'AGRI', name: 'Hydroponic Nutrient Stability Buffer', type: 'Concentrated Liquid' },
+                // --- TACTICAL ---
+                { id: 'TAC-01', cat: 'TAC', name: 'Acute Hemorrhage Control (Field)', type: 'Hemostatic Gel' },
+                { id: 'TAC-02', cat: 'TAC', name: 'Performance Under Duress (Adrenal)', type: 'Sublingual Troche' },
+                { id: 'TAC-03', cat: 'TAC', name: 'Chemical Agent Decontamination', type: 'Neutralizing Foam' },
+                { id: 'TAC-04', cat: 'TAC', name: 'Blast Traumatic Brain Injury (TBI) Modulator', type: 'Nasal Insufflation' },
+                // --- BIOLOGICALS ---
+                { id: 'BIO-01', cat: 'BIO', name: 'Soft Tissue Repair Peptide Matrix', type: 'Subcutaneous Injectable' },
+                { id: 'BIO-02', cat: 'BIO', name: 'Thymic Regenerative Complex (Immune Mod)', type: 'Lyophilized Vial' },
+                { id: 'BIO-03', cat: 'BIO', name: 'Growth Hormone Secretagogue (Sleep/Repair)', type: 'Transdermal Cream' },
+                { id: 'BIO-04', cat: 'BIO', name: 'Melanocortin Agonist (Pigmentation)', type: 'Nasal Spray' },
+                { id: 'BIO-05', cat: 'BIO', name: 'Copper Tripeptide Cosmetic Driver', type: 'Serum' },
+                { id: 'BIO-06', cat: 'BIO', name: 'Stem Cell Exosome Suspension Vehicle', type: 'Cryo-Vial' },
+                { id: 'BIO-07', cat: 'BIO', name: 'Glia-Derived Neurotrophic Factor (GDNF) Analog', type: 'Nasal Atomizer' },
+                // --- FUEL ---
+                { id: 'FUEL-01', cat: 'FUEL', name: 'Coenzyme 1 Oxidized Form (Cellular Energy)', type: 'IV Infusion Base' },
+                { id: 'FUEL-02', cat: 'FUEL', name: 'Mitochondrial Resuscitation Complex', type: 'IM Injection' },
+                { id: 'FUEL-03', cat: 'FUEL', name: 'Lipotropic Metabolic Amino Driver', type: 'Injectable' },
+                { id: 'FUEL-04', cat: 'FUEL', name: 'Ketone Ester Stability Matrix', type: 'Oral Solution' },
+                { id: 'FUEL-05', cat: 'FUEL', name: 'Reduced Thiol-Antioxidant High-Dose', type: 'Nebulization/IV' },
+                { id: 'FUEL-06', cat: 'FUEL', name: 'Carnitine Transport Facilitator (High Flow)', type: 'Liposomal Capsule' },
+                // --- GENE ---
+                { id: 'GEN-01', cat: 'GENE', name: 'Methylation Donor Complex (MTHFR Support)', type: 'Sublingual Troche' },
+                { id: 'GEN-02', cat: 'GENE', name: 'Telomerase Activator Complex', type: 'Capsule' },
+                { id: 'GEN-03', cat: 'GENE', name: 'Sirtuin Activator (Stilbenoid Matrix)', type: 'Liposomal Liquid' },
+                { id: 'GEN-04', cat: 'GENE', name: 'DNA Repair Enzyme Cofactor', type: 'Slow Release Cap' },
+                // --- NEURO ---
+                { id: 'NEU-01', cat: 'NEURO', name: 'Cholinergic Focus Driver (Pyrrolidone)', type: 'Capsule' },
+                { id: 'NEU-02', cat: 'NEURO', name: 'BDNF Upregulation Complex', type: 'Nasal Spray' },
+                { id: 'NEU-03', cat: 'NEURO', name: 'GABAergic Anxiolytic (Non-Benzo)', type: 'Rapid Dissolve Tab' },
+                { id: 'NEU-04', cat: 'NEURO', name: 'Micro-dose Serotonin Agonist (Cluster H/A)', type: 'Sublingual Disc' },
+                // --- ONCOLOGY ---
+                { id: 'ONC-01', cat: 'ONCO', name: 'Oral Mucositis (Head & Neck Ca): Muco-Adhesive', type: 'Oral Rinse' },
+                { id: 'ONC-02', cat: 'ONCO', name: 'Radiation Dermatitis Prevention Matrix', type: 'Emollient Base' },
+                { id: 'ONC-03', cat: 'ONCO', name: 'Cutaneous T-Cell Lymphoma (Topical)', type: 'Ointment' },
+                { id: 'ONC-04', cat: 'ONCO', name: 'Chemotherapy-Induced Nausea (Refractory)', type: 'Transdermal Gel' },
+                { id: 'ONC-05', cat: 'ONCO', name: 'Hand-Foot Syndrome High-Potency Urea', type: 'Urea Matrix' },
+                { id: 'ONC-06', cat: 'ONCO', name: 'Bone Marrow Suppression Adjunct', type: 'Injectable Factor' },
+                // --- PALLIATIVE ---
+                { id: 'PAL-01', cat: 'PALL', name: 'Terminal Agitation: ABHR Gel Matrix', type: 'Transdermal Gel' },
+                { id: 'PAL-02', cat: 'PALL', name: 'Excessive Secretions (Death Rattle)', type: 'Sublingual Drops' },
+                { id: 'PAL-03', cat: 'PALL', name: 'Malignant Fungating Wound Odor', type: 'Topical Powder' },
+                { id: 'PAL-04', cat: 'PALL', name: 'Refractory Chronic Cough Control', type: 'Nebulized Solution' },
+                // --- PAIN ---
+                { id: 'PAI-01', cat: 'PAIN', name: 'Trigeminal Neuralgia Block Complex', type: 'Transdermal Gel' },
+                { id: 'PAI-02', cat: 'PAIN', name: 'Diabetic Neuropathy (Micro-circulation)', type: 'Cream' },
+                { id: 'PAI-03', cat: 'PAIN', name: 'Complex Regional Pain Syndrome (CRPS)', type: 'Lipo-Gel' },
+                { id: 'PAI-04', cat: 'PAIN', name: 'Migraine Abortive Therapy', type: 'Nasal Insufflation' },
+                { id: 'PAI-05', cat: 'PAIN', name: 'Fibromyalgia Trigger Point Complex', type: 'Transdermal Cream' },
+                { id: 'PAI-06', cat: 'PAIN', name: 'Post-Herpetic Neuralgia (Shingles)', type: 'Lidocaine/Prilocaine Foam' },
+                { id: 'PAI-07', cat: 'PAIN', name: 'Intractable Arthritis (NSAID/DMSO Base)', type: 'Occlusive Rub' },
+                // --- DERMATOLOGY ---
+                { id: 'DER-01', cat: 'DERM', name: 'Recalcitrant Melasma (Triple Agent)', type: 'Transdermal Cream' },
+                { id: 'DER-02', cat: 'DERM', name: 'Alopecia Areata (JAK-Pathway Mod)', type: 'Topical Solution' },
+                { id: 'DER-03', cat: 'DERM', name: 'Cystic Acne / Rosacea Overlay', type: 'Niacinamide Matrix' },
+                { id: 'DER-04', cat: 'DERM', name: 'Keloid Scar Reduction', type: 'Occlusive Gel' },
+                { id: 'DER-05', cat: 'DERM', name: 'Vitiligo Repigmentation', type: 'Cream' },
+                { id: 'DER-06', cat: 'DERM', name: 'Hyperhidrosis (Excessive Sweating)', type: 'Topical Roll-On' },
+                // --- UROLOGY ---
+                { id: 'URO-01', cat: 'URO', name: 'Erectile Dysfunction: Vasoactive Matrix', type: 'Intracavernosal' },
+                { id: 'URO-02', cat: 'URO', name: 'Peyronies Disease (Fibrous Plaque)', type: 'Transdermal Gel' },
+                { id: 'URO-03', cat: 'URO', name: 'Testosterone Restoration (Scrotal)', type: 'Rapid Absorb Cream' },
+                { id: 'URO-04', cat: 'URO', name: 'Chronic Prostatitis/Pelvic Pain', type: 'Suppository' },
+                // --- SPORTS MEDICINE ---
+                { id: 'SPT-01', cat: 'SPRT', name: 'Iontophoresis: Acute Inflammation', type: 'Polarized Solution' },
+                { id: 'SPT-02', cat: 'SPRT', name: 'Phonophoresis: Deep Tissue Injury', type: 'Ultrasound Gel' },
+                { id: 'SPT-03', cat: 'SPRT', name: 'Muscle Spasm Release Complex', type: 'Cream' },
+                { id: 'SPT-04', cat: 'SPRT', name: 'Pre-Workout Vasodilation (Local)', type: 'Gel' },
+                { id: 'SPT-05', cat: 'SPRT', name: 'Compartment Syndrome Reduction', type: 'Transdermal Paste' },
+                // --- DENTAL ---
+                { id: 'DEN-01', cat: 'DENT', name: 'Burning Mouth Syndrome (Neuropathic)', type: 'Oral Rinse' },
+                { id: 'DEN-02', cat: 'DENT', name: 'Severe Gag Reflex Suppression', type: 'Lollipop/Troche' },
+                { id: 'DEN-03', cat: 'DENT', name: 'Oral Lichen Planus', type: 'Adhesive Paste' },
+                { id: 'DEN-04', cat: 'DENT', name: 'TMJ Muscle Spasm', type: 'Oral Cream/Gel' },
+                // --- PODIATRY ---
+                { id: 'POD-01', cat: 'POD', name: 'Onychomycosis Deep Driver', type: 'Lacquer' },
+                { id: 'POD-02', cat: 'POD', name: 'Mosaic Verruca (Resistant Warts)', type: 'Vesicant Paste' },
+                { id: 'POD-03', cat: 'POD', name: 'Raynauds Phenomenon (Feet)', type: 'Vasodilator Cream' },
+                { id: 'POD-04', cat: 'POD', name: 'Plantar Fasciitis Inflammation', type: 'Iontophoresis Patch' },
+                // --- ENT ---
+                { id: 'ENT-01', cat: 'ENT', name: 'Chronic Sinusitis (Biofilm Disruption)', type: 'Irrigation Capsule' },
+                { id: 'ENT-02', cat: 'ENT', name: 'Nasal Polyps Reduction', type: 'Atomized Spray' },
+                { id: 'ENT-03', cat: 'ENT', name: 'Inner Ear H3-Antagonist Protocol', type: 'Capsule' },
+                { id: 'ENT-04', cat: 'ENT', name: 'Refractory Tinnitus Suppression', type: 'Topical Ear Drop' },
+                // --- GASTRO ---
+                { id: 'GAS-01', cat: 'GAST', name: 'Chronic Anal Fissure (Vasodilator)', type: 'Rectal Ointment' },
+                { id: 'GAS-02', cat: 'GAST', name: 'Radiation Proctitis', type: 'Suppository' },
+                { id: 'GAS-03', cat: 'GAST', name: 'Eosinophilic Esophagitis Viscous Base', type: 'Viscous Slurry' },
+                { id: 'GAS-04', cat: 'GAST', name: 'Irritable Bowel Syndrome (IBS) Relaxation', type: 'Enteric Coated Cap' },
+                // --- HRT ---
+                { id: 'HRT-01', cat: 'HRT', name: 'Bio-Identical Progesterone', type: 'Rapid Dissolve Tab' },
+                { id: 'HRT-02', cat: 'HRT', name: 'Estrogen Ratio Modulation', type: 'Cream' },
+                { id: 'HRT-03', cat: 'HRT', name: 'Adrenal Fatigue Support', type: 'Sublingual Drops' },
+                { id: 'HRT-04', cat: 'HRT', name: 'Thyroid Desiccated Alternative', type: 'Slow Release Cap' },
+                { id: 'HRT-05', cat: 'HRT', name: 'Female Libido Enhancement', type: 'Transdermal Gel' },
+                { id: 'HRT-06', cat: 'HRT', name: 'Post-Menopausal Vaginal Atrophy', type: 'Vaginal Insert' },
+                // --- VET ---
+                { id: 'VET-01', cat: 'VET', name: 'Feline Hyperthyroidism', type: 'Penetrating Gel' },
+                { id: 'VET-02', cat: 'VET', name: 'Canine Atopic Dermatitis', type: 'Mousse' },
+                { id: 'VET-03', cat: 'VET', name: 'Equine Protozoal Myeloencephalitis', type: 'Suspension' },
+                { id: 'VET-04', cat: 'VET', name: 'Chronic Pain Management (Exotic Pets)', type: 'Flavor-Enhanced Liquid' },
+                // --- PEDS ---
+                { id: 'PED-01', cat: 'PED', name: 'Reflux Control (PPI Stability)', type: 'Alkaline Suspension' },
+                { id: 'PED-02', cat: 'PED', name: 'Autism Spectrum Sensory Formulation', type: 'Dye/Gluten Free' },
+                { id: 'PED-03', cat: 'PED', name: 'Diaper Dermatitis (Yeast Complex)', type: 'Barrier Paste' },
+                { id: 'PED-04', cat: 'PED', name: 'Seizure Disorder Micro-Dosing', type: 'Rectal Gel' },
+                // Additional protocols to meet minimum count requirement
+                { id: 'ADD-01', cat: 'DERM', name: 'Psoriasis Scalp Treatment (Advanced Base)', type: 'Shampoo Base' },
+                { id: 'ADD-02', cat: 'PAIN', name: 'Peripheral Neuropathic Pain (High Potency)', type: 'Transdermal Cream' },
+                { id: 'ADD-03', cat: 'URO', name: 'Bladder Instillation Therapy (Interstitial Cystitis)', type: 'Sterile Solution' },
+                { id: 'ADD-04', cat: 'NEURO', name: 'Narcolepsy Wakefulness Agent (Non-Stimulant)', type: 'Sublingual Film' },
+                { id: 'ADD-05', cat: 'FUEL', name: 'Hypoglycemia Prevention (Extended Release)', type: 'Oral Gel' },
+                { id: 'ADD-06', cat: 'BIO', name: 'Ocular Surface Peptide Repair', type: 'Sterile Drops' },
+                { id: 'ADD-07', cat: 'GENE', name: 'Autophagy Pathway Modulator', type: 'Capsule' },
+                { id: 'ADD-08', cat: 'ONCO', name: 'Immunotherapy Side Effect Management (Derm)', type: 'Topical Foam' },
+                { id: 'ADD-09', cat: 'AGRI', name: 'Plant Growth Regulator (High Yield)', type: 'Aqueous Solution' },
+                { id: 'ADD-10', cat: 'ENVI', name: 'Aviation Fuel Contaminant Neutralizer', type: 'Additive' },
+                { id: 'ADD-11', cat: 'SPACE', name: 'Closed-Loop Atmosphere Sanitization', type: 'Aerosolized Biocide' },
+                { id: 'ADD-12', cat: 'TAC', name: 'Trauma Induced Coagulopathy Management', type: 'Injectable' },
+                { id: 'ADD-13', cat: 'PSYCH', name: 'OCD Compulsion Reduction Complex', type: 'Extended Release Tablet' },
+                { id: 'ADD-14', cat: 'OPHT', name: 'Corneal Dystrophy Emulsion', type: 'Ointment' },
+                { id: 'ADD-15', cat: 'PALL', name: 'Cachexia Muscle Preservation Protocol', type: 'Sublingual Suspension' },
+                { id: 'ADD-16', cat: 'HRT', name: 'Androgen Deficiency Syndrome (DHEA/Preg)', type: 'Transdermal Cream' },
+                { id: 'ADD-17', cat: 'GAST', name: 'GERD Reflux Control (Sustained Release)', type: 'Capsule' },
+                { id: 'ADD-18', cat: 'ENT', name: 'Nasal Dryness/Crusting (Mineralized Gel)', type: 'Nasal Gel' },
+                { id: 'ADD-19', cat: 'VET', name: 'Chronic Renal Failure (Phosphate Binder)', type: 'Oral Liquid' },
+                { id: 'ADD-20', cat: 'POD', name: 'Diabetic Foot Ulcer Healing Vector', type: 'Hydrogel' },
+                { id: 'ADD-21', cat: 'DENT', name: 'Canker Sore/Aphthous Ulcer Paste', type: 'Adhesive Paste' },
+                { id: 'ADD-22', cat: 'SPRT', name: 'Tendon Repair Peptide (Localized)', type: 'Injection Prep' },
+                { id: 'ADD-23', cat: 'PED', name: 'Pain Management for Sickle Cell Crisis', type: 'Sublingual Solution' },
+                { id: 'ADD-24', cat: 'PAIN', name: 'Post-Surgical Scar Neuropathy', type: 'High-Penetration Cream' },
+                { id: 'ADD-25', cat: 'DERM', name: 'Hair Loss (Fin/Min Topical Combo)', type: 'Solution' },
+                { id: 'ADD-26', cat: 'FUEL', name: 'Electrolyte/Mineral Balance (Intensive Care)', type: 'IV Solution' },
+                { id: 'ADD-27', cat: 'NEURO', name: 'Microglia Activation Inhibitor', type: 'Capsule' },
+                { id: 'ADD-28', cat: 'GENE', name: 'NMN/NR Supplementation Protocol', type: 'Liposomal Liquid' },
+                { id: 'ADD-29', cat: 'AGRI', name: 'Pest Resistance Gene Silencer (CRISPR Adjunct)', type: 'Micro-Encapsulated Spray' },
+                
+                // Final protocols to hit exactly 132
+                { id: 'SEC-130', cat: 'AGRI', name: 'Enhanced Nutrient Uptake Vector', type: 'Agricultural Solution' },
+                { id: 'SEC-131', cat: 'SPRT', name: 'High-Altitude Performance Optimizer', type: 'Oral Troche' },
+                { id: 'SEC-132', cat: 'ENVI', name: 'Heavy Oil Spill Dispersant (Biologically Safe)', type: 'Surfactant Base' },
+
+            ];
+
+            const finalProtocols = [...baseProtocols];
+            // This calculation ensures the array is exactly 132 items long.
+            while (finalProtocols.length > TOTAL_PROTOCOLS) {
+                finalProtocols.pop();
+            }
+            while (finalProtocols.length < TOTAL_PROTOCOLS) {
+                const cat = categories[Math.floor(Math.random() * categories.length)];
+                finalProtocols.push({
+                    id: `SEC-${finalProtocols.length + 1}`,
+                    cat: cat.id,
+                    name: `Generated Filler Formulation: Variation ${finalProtocols.length + 1}`,
+                    type: 'Secure Matrix'
+                });
+            }
+            return finalProtocols;
+        };
+
+        // --- PRE-SALE COMPONENTS (Refactored from original HTML/JS) ---
+
+        const RedactedText = ({ hint = "CLASSIFIED" }) => {
             const [revealed, setRevealed] = useState(false);
             return (
                 <span 
@@ -163,9 +371,9 @@
                         <line x1="0" y1="50" x2="400" y2="50" stroke="#333" strokeWidth="1" strokeDasharray="4 4" />
                         <line x1="0" y1="100" x2="400" y2="100" stroke="#333" strokeWidth="1" strokeDasharray="4 4" />
                         <line x1="0" y1="150" x2="400" y2="150" stroke="#333" strokeWidth="1" strokeDasharray="4 4" />
-                        <path d="M0,20 Q100,30 400,120" fill="none" stroke="#555" strokeWidth="2" />
+                        <path d={`M0,20 Q100,30 400,120`} fill="none" stroke="#555" strokeWidth="2" />
                         <text x="350" y="110" fill="#555" fontSize="10" className="font-mono">STANDARD</text>
-                        <path d="M0,20 Q50,20 150,180 L400,190" fill="none" stroke="#fff" strokeWidth="2" />
+                        <path d={`M0,20 Q50,20 150,180 L400,190`} fill="none" stroke="#fff" strokeWidth="2" />
                         <text x="160" y="170" fill="#fff" fontSize="10" className="font-mono">FAILSAFE PROTOCOL</text>
                     </svg>
                 </div>
@@ -195,7 +403,7 @@
                                 onClick={onVerify} 
                                 className="w-full py-4 text-xs font-bold bg-white text-black hover:bg-zinc-200 transition-colors tracking-widest uppercase"
                             >
-                                > Affirmative (I am 18+)
+                                {'>'} Affirmative (I am 18+)
                             </button>
                             <button 
                                 onClick={() => window.location.href = 'https://google.com'} 
@@ -228,6 +436,7 @@
 
             const handleSubmit = (e) => {
                 e.preventDefault();
+                // Custom clearance code for Pre-Sale access
                 if (input === "mra227") {
                     onLogin();
                 } else {
@@ -238,7 +447,7 @@
             };
 
             return (
-                <div className="h-screen w-full flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm text-white font-mono p-4">
+                <div className="h-screen w-full flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm text-white font-mono p-4 fixed top-0 left-0 z-50">
                     <div className="max-w-md w-full">
                         <div className="mb-8 text-xs tracking-[0.5em] text-zinc-500">FAILSAFE ARCHITECTURE</div>
                         {!showInput ? (
@@ -247,7 +456,7 @@
                             <form onSubmit={handleSubmit} className="w-full">
                                 <div className="text-xs mb-2 text-zinc-400">ENTER CLEARANCE CODE:</div>
                                 <div className={`relative flex items-center border-b-2 ${error ? 'border-red-500 shake' : 'border-zinc-700 focus-within:border-white'} transition-colors`}>
-                                    <span className="text-zinc-500 mr-2">></span>
+                                    <span className="text-zinc-500 mr-2">{'>'}</span>
                                     <input 
                                         type="password" 
                                         autoFocus
@@ -267,7 +476,7 @@
 
         const NREAModal = ({ onClose, onAccept }) => {
             return (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-[fadeIn_0.3s_ease-out]">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-[fadeIn_0.3s_ease-out]">
                     <div className="bg-[#0a0a0a]/95 border border-zinc-600 w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh]">
                         <div className="border-b border-zinc-800 p-4 flex justify-between items-center bg-zinc-900/50">
                             <h3 className="font-mono text-xs text-red-500 tracking-widest flex items-center gap-2">
@@ -299,7 +508,287 @@
             );
         };
 
-        const App = () => {
+        // --- MAIN PAGE VIEWS ---
+
+        const PortfolioView = ({ onPreSaleClick }) => {
+            const protocolDatabase = useMemo(useProtocolData, []);
+            const [selectedCategory, setSelectedCategory] = useState('ALL');
+            const [searchTerm, setSearchTerm] = useState('');
+            const [hoveredItem, setHoveredItem] = useState(null);
+
+            const filteredData = protocolDatabase.filter(item => 
+                (selectedCategory === 'ALL' || item.cat === selectedCategory) &&
+                item.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            return (
+                <div className="min-h-screen bg-[#050b14] text-slate-300 font-sans selection:bg-cyan-500/30 overflow-hidden flex flex-col">
+                    
+                    {/* 3D Wireframe Background */}
+                    <div className="fixed inset-0 z-0 opacity-20 pointer-events-none"
+                        style={{
+                            backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(6,182,212,0.15) 0%, transparent 50%), linear-gradient(0deg, transparent 24%, rgba(6,182,212,0.05) 25%, rgba(6,182,212,0.05) 26%, transparent 27%, transparent 74%, rgba(6,182,212,0.05) 75%, rgba(6,182,212,0.05) 76%, transparent 77%, transparent)',
+                            backgroundSize: '60px 60px'
+                        }}>
+                    </div>
+
+                    {/* Top HUD */}
+                    <header className="relative z-20 border-b border-slate-800 bg-[#050b14]/90 backdrop-blur-md">
+                        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                            <div className="flex items-center space-x-4">
+                                {/* Use IconRenderer */}
+                                <IconRenderer name="Hexagon" size={28} className="text-cyan-500 animate-pulse" strokeWidth={1.5} />
+                                <div>
+                                    <h1 className="text-lg font-bold tracking-wider text-white">FAILSAFE ARCHITECTURE PTY LTD</h1>
+                                    <div className="flex items-center space-x-2 text-[10px] text-cyan-500 font-mono tracking-widest">
+                                        <span>SECURE ARCHITECTURAL BLUEPRINT</span>
+                                        <span className="w-1 h-1 bg-cyan-500 rounded-full"></span>
+                                        <span>LEVEL 7 CLEARANCE</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="flex items-center space-x-6">
+                                <div className="hidden md:flex flex-col items-end">
+                                    <span className="text-[10px] text-slate-500 font-mono">DATABASE STATUS</span>
+                                    <span className="text-xs text-emerald-400 font-bold flex items-center">
+                                        {/* Use IconRenderer */}
+                                        <IconRenderer name="Shield" size={12} className="mr-1" />
+                                        ENCRYPTED
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Main Interface */}
+                    <main className="flex-1 relative z-10 max-w-7xl mx-auto w-full p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        
+                        {/* Left Control Panel */}
+                        <div className="lg:col-span-3 space-y-6">
+                            <div className="bg-slate-900/50 border border-slate-800 p-4 rounded-xl backdrop-blur-sm h-full flex flex-col">
+                                <h3 className="text-xs font-bold text-slate-500 mb-4 tracking-widest">FILTER BY SECTOR</h3>
+                                <div className="space-y-2 overflow-y-auto custom-scrollbar flex-1 pr-2">
+                                    <button 
+                                        onClick={() => setSelectedCategory('ALL')}
+                                        className={`w-full text-left px-3 py-2 rounded-lg text-sm font-mono transition-all ${selectedCategory === 'ALL' ? 'bg-slate-800 text-white border-l-2 border-white' : 'text-slate-500 hover:text-slate-300'}`}
+                                    >
+                                        [00] GLOBAL INDEX
+                                    </button>
+                                    {categories.map((cat, i) => (
+                                        <button 
+                                            key={cat.id}
+                                            onClick={() => setSelectedCategory(cat.id)}
+                                            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-mono transition-all flex items-center space-x-2 justify-between group ${selectedCategory === cat.id ? 'bg-slate-800/80 text-white' : 'text-slate-500 hover:text-slate-300'}`}
+                                        >
+                                            <div className={`flex items-center space-x-2 ${selectedCategory === cat.id ? cat.color : ''}`}>
+                                                {/* CRITICAL FIX: Explicitly render icon component */}
+                                                <IconRenderer name={cat.iconName} size={14} /> 
+                                                <span>[0{i+1}] {cat.name.split('&')[0]}</span>
+                                            </div>
+                                            <IconRenderer name="ChevronRight" size={14} className={selectedCategory === cat.id ? cat.color : 'text-slate-500'} />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Center/Right Data Stream */}
+                        <div className="lg:col-span-9 flex flex-col h-[calc(100vh-140px)]">
+                            
+                            {/* NEW PRE-SALE BAR - Emphasized CTA */}
+                            <button 
+                                onClick={onPreSaleClick}
+                                className="bg-gradient-to-r from-red-600 to-amber-500 p-3 text-white font-mono text-base font-bold mb-4 rounded-lg shadow-xl hover:shadow-red-500/50 transition-all flex items-center justify-center space-x-3 animate-pulse-slow shrink-0"
+                            >
+                                <IconRenderer name="Zap" size={18} />
+                                <span>CLICK HERE TO ORDER NOW | LIMITED PRE-SALE ACTIVE</span>
+                                <IconRenderer name="ChevronRight" size={18} />
+                            </button>
+
+                            {/* Global Metrics Dashboard (4 Quadrants) */}
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 shrink-0">
+                                {/* 1. Protocol Count */}
+                                <div className="p-3 lg:p-4 rounded-xl bg-slate-800/50 border border-cyan-700/50 shadow-lg flex items-center justify-between">
+                                    <div>
+                                        <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest block">TOTAL PROTOCOLS</span>
+                                        <span className="text-xl lg:text-3xl font-bold text-cyan-400 mt-1 block">{TOTAL_PROTOCOLS}</span>
+                                    </div>
+                                    <IconRenderer name="Database" size={24} className="text-cyan-600 opacity-50" />
+                                </div>
+                                {/* 2. Component Count */}
+                                <div className="p-3 lg:p-4 rounded-xl bg-slate-800/50 border border-emerald-700/50 shadow-lg flex items-center justify-between">
+                                    <div>
+                                        <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest block">SPECIALIZED COMPONENTS</span>
+                                        <span className="text-xl lg:text-3xl font-bold text-emerald-400 mt-1 block">{TOTAL_COMPONENTS}</span>
+                                    </div>
+                                    <IconRenderer name="Cpu" size={24} className="text-emerald-600 opacity-50" />
+                                </div>
+                                {/* 3. Technology Count */}
+                                <div className="p-3 lg:p-4 rounded-xl bg-slate-800/50 border border-violet-700/50 shadow-lg flex items-center justify-between">
+                                    <div>
+                                        <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest block">TECHNOLOGY BASE COUNT</span>
+                                        <span className="text-xl lg:text-3xl font-bold text-violet-400 mt-1 block">{TOTAL_TECHNOLOGY_COMPOUNDS}</span>
+                                    </div>
+                                    <IconRenderer name="FlaskConical" size={24} className="text-violet-600 opacity-50" />
+                                </div>
+                                {/* 4. Natural Count */}
+                                <div className="p-3 lg:p-4 rounded-xl bg-slate-800/50 border border-yellow-700/50 shadow-lg flex items-center justify-between">
+                                    <div>
+                                        <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest block">NATURAL ORIGIN COUNT</span>
+                                        <span className="text-xl lg:text-3xl font-bold text-yellow-400 mt-1 block">{TOTAL_NATURAL_COMPOUNDS}</span>
+                                    </div>
+                                    <IconRenderer name="Leaf" size={24} className="text-yellow-600 opacity-50" />
+                                </div>
+                            </div>
+                            
+                            {/* Search Bar */}
+                            <div className="mb-4 relative group shrink-0">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <IconRenderer name="Search" size={16} className="text-slate-500 group-focus-within:text-cyan-500 transition-colors" />
+                                </div>
+                                <input 
+                                    type="text" 
+                                    placeholder="SEARCH PROTOCOL DATABASE (e.g., 'Chelation', 'TBI', 'Myopia')..." 
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full bg-slate-900/50 border border-slate-700 rounded-lg py-3 pl-10 pr-4 text-sm font-mono text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
+                                />
+                            </div>
+
+                            {/* The List (132 Protocols) */}
+                            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar protocol-list-container bg-slate-900/20 border border-slate-800 rounded-xl relative">
+                                
+                                {/* Dynamic Warning Overlays (Condensed for space) */}
+                                {(selectedCategory === 'ONCO' || selectedCategory === 'TAC' || selectedCategory === 'BIO' || selectedCategory === 'SPACE' || selectedCategory === 'ENVI' || selectedCategory === 'OPHT') && (
+                                    <div className="sticky top-0 z-20 bg-rose-900/20 backdrop-blur-md border-b border-rose-500/30 p-2 text-center mb-2">
+                                        <p className="text-[10px] text-rose-300 font-mono flex items-center justify-center space-x-4">
+                                            {selectedCategory === 'ONCO' && <><IconRenderer name="AlertCircle" size={12} className="mr-2" /><span>CYTOTOXIC / HAZARDOUS HANDLING ACTIVE</span></>}
+                                            {selectedCategory === 'BIO' && <><IconRenderer name="Dna" size={12} className="mr-2" /><span>STERILE COLD-CHAIN REQUIRED</span></>}
+                                            {selectedCategory === 'SPACE' && <><IconRenderer name="Rocket" size={12} className="mr-2" /><span>ZERO-G / COSMIC RADIATION ACTIVE</span></>}
+                                            {selectedCategory === 'ENVI' && <><IconRenderer name="Sprout" size={12} className="mr-2" /><span>TOXICOLOGY & CHELATION ACTIVE</span></>}
+                                            {selectedCategory === 'OPHT' && <><IconRenderer name="Eye" size={12} className="mr-2" /><span>STERILE OPHTHALMIC PREPARATION</span></>}
+                                        </p>
+                                    </div>
+                                )}
+
+                                <div className="grid grid-cols-1 gap-1 p-2">
+                                    {filteredData.map((item) => {
+                                        const catInfo = categories.find(c => c.id === item.cat);
+                                        const isHovered = hoveredItem === item.id;
+                                        
+                                        return (
+                                            <div 
+                                                key={item.id}
+                                                onMouseEnter={() => setHoveredItem(item.id)}
+                                                onMouseLeave={() => setHoveredItem(null)}
+                                                className={`relative p-2 md:p-3 rounded border transition-all duration-200 cursor-crosshair group ${
+                                                    isHovered 
+                                                        ? 'bg-slate-800 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.1)] z-10' 
+                                                        : 'bg-slate-900/40 border-slate-800 hover:border-slate-600'
+                                                }`}
+                                            >
+                                                <div className="flex items-center justify-between">
+                                                    
+                                                    {/* Left: ID & Name */}
+                                                    <div className="flex items-center space-x-2 md:space-x-4 flex-1 overflow-hidden">
+                                                        <span className={`text-[10px] md:text-xs font-mono w-14 md:w-16 shrink-0 ${catInfo?.color || 'text-slate-500'}`}>{item.id}</span>
+                                                        <div className="flex flex-col min-w-0">
+                                                            <span className="text-xs md:text-sm font-medium text-slate-200 group-hover:text-white truncate max-w-[150px] md:max-w-[300px] lg:max-w-[450px]">
+                                                                {item.name}
+                                                            </span>
+                                                            <span className="text-[8px] md:text-[10px] text-slate-500 uppercase tracking-wide">
+                                                                Indication Verified
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Right: Redacted Data */}
+                                                    <div className="flex items-center space-x-2 md:space-x-4 shrink-0">
+                                                        <div className="hidden md:flex flex-col items-end text-right">
+                                                            <span className="text-[10px] font-mono text-slate-500 mb-1">FORMULATION</span>
+                                                            <div className="flex items-center space-x-2 bg-black/40 px-2 py-1 rounded border border-slate-700/50">
+                                                                <span className="text-xs font-mono text-slate-600 tracking-widest select-none blur-[2px] group-hover:blur-[3px] transition-all">
+                                                                    ███████████
+                                                                </span>
+                                                                <IconRenderer name="EyeOff" size={10} className="text-slate-600" />
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div className="w-16 md:w-24 text-right">
+                                                            <span className={`text-[8px] md:text-[10px] px-1 md:px-2 py-1 rounded border ${catInfo?.border || 'border-slate-700'} ${catInfo?.color || 'text-slate-500'} bg-opacity-10 inline-block w-full text-center truncate`}>
+                                                                {catInfo?.name.split(' ')[0]}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Detailed "Redacted" Dropdown on Hover with FULL TITLE */}
+                                                {isHovered && (
+                                                    <div className="mt-3 pt-3 border-t border-slate-700/50 text-xs animate-fadeIn relative z-20">
+                                                        {/* Full Title Section */}
+                                                        <div className="mb-3 pb-2 border-b border-slate-800/50">
+                                                            <span className="text-[10px] text-slate-500 font-mono block mb-1">FULL PROTOCOL DESIGNATION</span>
+                                                            <span className="text-cyan-100 font-medium text-sm leading-relaxed">{item.name}</span>
+                                                        </div>
+                                                        
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                            <div>
+                                                                <span className="text-slate-500 font-mono block mb-1">DELIVERY VECTOR</span>
+                                                                <span className="text-red-900 bg-red-900/10 px-1 font-mono select-none inline-block">
+                                                                    [RESTRICTED: NDA REQUIRED]
+                                                                </span>
+                                                            </div>
+                                                            <div>
+                                                                <span className="text-slate-500 font-mono block mb-1">COMPOUNDING INSTRUCTION</span>
+                                                                <span className="text-red-900 bg-red-900/10 px-1 font-mono select-none inline-block">
+                                                                    [RESTRICTED: NDA REQUIRED]
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                    
+                                    {/* End of list marker */}
+                                    <div className="py-4 text-center">
+                                        <div className="inline-flex items-center space-x-2 px-4 py-1 rounded-full bg-slate-800/50 border border-slate-700">
+                                            <IconRenderer name="Database" size={12} className="text-slate-500" />
+                                            <span className="text-[10px] text-slate-500 font-mono">END OF PUBLIC RECORD. TOTAL ENTRIES: {TOTAL_PROTOCOLS}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="relative z-20 bg-[#050b14] border-t border-slate-800 py-4 px-6 shrink-0">
+                        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div className="text-zinc-600 text-xs font-mono">
+                                <p>&copy; 2025 FAILSAFE ARCHITECTURE PTY LTD.</p>
+                                <p className="mt-1">
+                                    CREATOR: <a href="https://georgerossiter.com" target="_blank" className="hover:text-white transition-colors border-b border-zinc-700 hover:border-white pb-0.5">George Rossiter</a>
+                                </p>
+                            </div>
+                            <div className="flex gap-6 text-zinc-600 text-xs">
+                                <a href="#" className="hover:text-white transition-colors">LEGAL</a>
+                                <a href="#" className="hover:text-white transition-colors">SAFETY</a>
+                            </div>
+                        </div>
+                        <div className="max-w-4xl mx-auto px-6 mt-8 text-[10px] text-zinc-700 text-center leading-relaxed">
+                            DISCLAIMER: This product is for metabolic optimization and liver support. It does not reduce Blood Alcohol Content (BAC).
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+
+        const PreSalePage = ({ onBackClick }) => {
             const [isAgeVerified, setIsAgeVerified] = useState(false);
             const [isAuthenticated, setIsAuthenticated] = useState(false);
             const [status, setStatus] = useState("IDLE");
@@ -330,7 +819,9 @@
                 if (formData.email.includes("@") && formData.name.length > 2 && formData.address.length > 5) {
                     setShowModal(true);
                 } else {
-                    alert("DATA INCOMPLETE: PLEASE FILL ALL LOGISTICS FIELDS.");
+                    // Using a simple message box instead of alert()
+                    setStatus("ERROR: DATA INCOMPLETE. PLEASE FILL ALL LOGISTICS FIELDS.");
+                    setTimeout(() => setStatus("IDLE"), 3000);
                 }
             };
 
@@ -378,12 +869,17 @@ Please issue invoice to the email provided.
 
             return (
                 <div className="min-h-screen text-gray-300 selection:bg-white selection:text-black relative animate-[fadeIn_1s_ease-in]">
+                    {/* Styles are applied via global style tag in App */}
                     <div className="scanline"></div>
                     {showModal && <NREAModal onClose={() => setShowModal(false)} onAccept={handleNREAAccept} />}
 
                     <nav className="fixed top-0 w-full border-b border-zinc-900/50 bg-[#050505]/80 backdrop-blur-md z-40 flex justify-between items-center px-6 py-4">
-                        <div className="font-mono text-xs tracking-[0.2em] text-white">
-                            FAILSAFE<span className="text-zinc-600">ARCHITECTURE</span>
+                        <div className="font-mono text-xs tracking-[0.2em] text-white flex items-center gap-4">
+                            <button onClick={onBackClick} className="text-zinc-500 hover:text-white transition-colors flex items-center">
+                                <IconRenderer name="ChevronLeft" size={16} className="mr-1"/> PORTFOLIO
+                            </button>
+                            <span>|</span>
+                            <span className="text-emerald-500">PRE-SALE ACTIVE</span>
                         </div>
                         <div className="flex gap-4 font-mono text-xs text-zinc-500">
                             <span className="hidden md:inline">CLEARANCE: <span className="text-emerald-500">MRA-227</span></span>
@@ -401,7 +897,7 @@ Please issue invoice to the email provided.
                         </h1>
                         <p className="text-lg md:text-xl text-zinc-300 max-w-2xl leading-relaxed drop-shadow-md">
                             We do not fix mistakes. We optimize biology. <br/>
-                            A proprietary, high-velocity compound designed to neutralize <RedactedText>ACETALDEHYDE</RedactedText> toxicity.
+                            A proprietary, high-velocity compound designed to neutralize <RedactedText hint="ACETALDEHYDE">ACETALDEHYDE</RedactedText> toxicity.
                         </p>
                     </header>
 
@@ -413,7 +909,7 @@ Please issue invoice to the email provided.
                                     <h3 className="text-2xl font-semibold text-white mb-6">The "Black Box" Protocol</h3>
                                     <div className="space-y-4 text-zinc-300 text-sm leading-7">
                                         <p>Standard recovery methods rely on hydration. This is insufficient for acute toxicity.</p>
-                                        <p>The Failsafe Protocol utilizes a dense matrix of <RedactedText>COMPOUND A</RedactedText> to bind directly to toxins.</p>
+                                        <p>The Failsafe Protocol utilizes a dense matrix of <RedactedText hint="COMPOUND A">COMPOUND A</RedactedText> to bind directly to toxins.</p>
                                         <p className="font-mono text-xs pt-4 text-zinc-500 border-l-2 border-zinc-700 pl-4">WARNING: IP PROTECTION ACTIVE. INGREDIENT LIST CLASSIFIED.</p>
                                     </div>
                                 </div>
@@ -460,17 +956,13 @@ Please issue invoice to the email provided.
                                         <div className="text-emerald-400 font-bold">$99.00</div>
                                     </div>
                                 </div>
-                                <div className="mb-2 flex justify-between text-zinc-500 uppercase">
-                                    <span>BETA SUBSIDY APPLIED (66% OFF)</span>
-                                    <span>Allocation Saturation: 87%</span>
-                                </div>
                                 <ProgressBar value={87} />
                             </div>
 
                             <div className="border-t border-zinc-800 pt-8">
                                 {status === "SUCCESS" ? (
                                     <div className="text-emerald-500 font-mono text-sm border border-emerald-900/30 bg-emerald-900/10 p-4 rounded text-center">
-                                        > TRANSMISSION SENT.<br/>> CHECK YOUR EMAIL CLIENT TO CONFIRM SEND.
+                                        {'>'} TRANSMISSION SENT.<br/>{'>'} CHECK YOUR EMAIL CLIENT TO CONFIRM SEND.
                                     </div>
                                 ) : (
                                     <form onSubmit={handleRequestClick} className="flex flex-col gap-4">
@@ -500,6 +992,7 @@ Please issue invoice to the email provided.
                                         </button>
                                     </form>
                                 )}
+                                {status.startsWith("ERROR") && <p className="text-red-500 text-xs mt-2 text-center">{status}</p>}
                                 <p className="mt-4 text-xs text-zinc-600 text-center">
                                     Payment invoice will be issued upon receipt of this transmission.
                                 </p>
@@ -512,7 +1005,7 @@ Please issue invoice to the email provided.
                             <div className="text-zinc-600 text-xs font-mono">
                                 <p>&copy; 2025 FAILSAFE ARCHITECTURE PTY LTD.</p>
                                 <p className="mt-1">
-                                    CREATOR: <a href="https://GeorgeRossiter.com" target="_blank" className="hover:text-white transition-colors border-b border-zinc-700 hover:border-white pb-0.5">George Rossiter</a>
+                                    CREATOR: <a href="https://georgerossiter.com" target="_blank" className="hover:text-white transition-colors border-b border-zinc-700 hover:border-white pb-0.5">George Rossiter</a>
                                 </p>
                             </div>
                             <div className="flex gap-6 text-zinc-600 text-xs">
@@ -528,8 +1021,34 @@ Please issue invoice to the email provided.
             );
         };
 
+        // --- MAIN APPLICATION ENTRY ---
+
+        const App = () => {
+            // State to manage the active view: 'portfolio' or 'presale'
+            const [activeView, setActiveView] = useState('portfolio'); 
+
+            // Custom CSS for App component to handle transitions and fonts
+            const globalStyles = `
+                @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;700&family=Inter:wght@300;600;900&display=swap');
+                .font-mono { font-family: 'JetBrains Mono', monospace; }
+                .font-sans { font-family: 'Inter', sans-serif; }
+            `;
+
+            return (
+                <>
+                    <style>{globalStyles}</style>
+                    {activeView === 'portfolio' 
+                        ? <PortfolioView onPreSaleClick={() => setActiveView('presale')} />
+                        : <PreSalePage onBackClick={() => setActiveView('portfolio')} />
+                    }
+                </>
+            );
+        };
+
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+</body>
+</html>
 </body>
 </html>
