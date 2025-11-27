@@ -1049,5 +1049,46 @@ Please issue invoice to the email provided.
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
+    <div id="protocol-footer-container" style="text-align: center; padding: 20px 0; border-top: 1px solid #eee; margin-top: 40px; font-family: Arial, sans-serif; font-size: 14px; color: #555;">
+    
+    <p>
+        <strong style="color: #000;">Protocol Engagement Data:</strong> 
+        Over <span id="user-stats-counter" style="font-weight: bold; color: #1e88e5;">0</span> unique protocol interactions recorded globally.
+    </p>
+
+    <p style="margin-top: 10px; font-size: 12px; color: #888;">
+        &copy; <span id="current-year"></span> All Rights Reserved. 
+        <br>
+        <span style="font-style: italic;">IP Ownership: Failsafe Architecture Pty Ltd | Creator: George Rossiter</span>
+    </p>
+    
+</div>
+
+<script>
+    // --- JavaScript Counter Protocol (The Simple Display Engine) ---
+
+    // 1. Initial State: Set your current total number of unique users/protocol interactions here.
+    // NOTE: For a true global count, this number must be periodically updated or fed from a backend system.
+    const initial_protocol_users = 11342; 
+
+    // 2. Formatting: Add commas for readability.
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // 3. Display Injection: Update the HTML elements.
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const counterElement = document.getElementById('user-stats-counter');
+        if (counterElement) {
+            counterElement.textContent = formatNumber(initial_protocol_users);
+        }
+
+        // Update the Copyright Year
+        const yearElement = document.getElementById('current-year');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
+    });
+</script>
 </body>
 </html>
